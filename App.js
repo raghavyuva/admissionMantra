@@ -6,12 +6,8 @@ import Login from './screen/Login';
 import Course from './screen/Course';
 import Councelling from './screen/Councelling';
 
-export default function App() {
-  return (
-    <View>
-      <Login />
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+import MainStackNavigator from './navigation/MainStackNavigator'
 
+export default function App() {
+  return <MainStackNavigator />
+}

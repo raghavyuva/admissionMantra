@@ -4,7 +4,11 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 
-const Main = () => {
+const Main = props => {
+    const { navigation } = props
+    const myFunc = () => {
+            navigation.navigate('Login');
+    }
     return (
         <View style={styles.main}>
             <Top />
@@ -18,7 +22,9 @@ const Main = () => {
                 </View>
             </View>
             <View style={styles.bottom}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => myFunc()}
+                >
                     <LinearGradient
                         colors={['#36D1DC', '#5B86E5']}
                         style={styles.btn1}
@@ -50,7 +56,7 @@ const Main = () => {
 }
 
 const styles = StyleSheet.create({
-    main: { flexDirection: "column" },
+    main: { flexDirection: "column", backgroundColor:"white" },
     middle: { height: '40%', alignItems: "center", justifyContent: "center" },
     mainImg: { width: 271, height: 197, marginBottom: 10 },
     txt2: { fontSize: 18, textAlign: 'center', color: "#252526", fontWeight: "100", marginBottom: 20 },

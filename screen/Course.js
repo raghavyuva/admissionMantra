@@ -48,7 +48,7 @@ const Course = () => {
 }
 
 const styles = StyleSheet.create({
-    main: {},
+    main: {backgroundColor:"white", height:"100%"},
     top: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
     course: { fontSize: 26 },
     topImg: { width: 212, height: 230 },
