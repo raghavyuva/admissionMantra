@@ -51,10 +51,14 @@ const Login = props => {
                 <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 10, paddingRight: 10, fontSize: 18 }}
                     value={usrinp}
                     onChangeText={changeone}
+                    returnKeyType="next"
+                    onSubmitEditing={() => { this.secondTextInput.focus(); }}
+                    blurOnSubmit={false}
                 ></TextInput>
                 <Text style={{ marginTop: 20, color: "#b3b3b3" }}>Password</Text>
                 <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 10, paddingRight: 10, fontSize: 18, }}
                     value={usrpass}
+                    ref={(input) => { this.secondTextInput = input; }}
                     onChangeText={changetwo}
                 ></TextInput>
                 <TouchableOpacity style={{ marginTop: 10, alignItems: "center" }}><Text style={{ color: "#b3b3b3" }}>Forgot Password?</Text></TouchableOpacity>
@@ -93,7 +97,7 @@ const Login = props => {
 }
 
 const styles = StyleSheet.create({
-    main: { flexDirection: "column", backgroundColor:"white" },
+    main: { flexDirection: "column", backgroundColor: "white" },
 
     middle: { height: '40%', justifyContent: "center", width: "80%", marginLeft: "10%" },
 
