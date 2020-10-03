@@ -8,6 +8,7 @@ import Login from '../screen/Login';
 import Main from '../screen/Main';
 import Pdf from '../screen/Pdf';
 import CourseComp from '../screen/CourseComp';
+import Paper from '../screen/Paper';
 const Stack = createStackNavigator()
 
 const MainStackNavigator = () => {
@@ -21,6 +22,9 @@ const MainStackNavigator = () => {
                 <Stack.Screen name='Login' component={Login} options={{ title: 'Bed Bureau' }} />
                 <Stack.Screen name='Councelling' component={Councelling} options={{ title: 'Bed Bureau' }} />
                 <Stack.Screen name='CourseComp' component={CourseComp} options={{ title: 'Bed Bureau' }} />
+                <Stack.Screen name='Paper' component={Paper} options={{ title: 'Bed Bureau' }} />
+                <Stack.Screen name='Pdf' component={Pdf} options={{ title: 'Bed Bureau' }} />
+
             </Stack.Navigator>
         </NavigationContainer>
     )

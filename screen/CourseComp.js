@@ -6,18 +6,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 
 
-const CourseComp = props => {
-    const { navigation } = props
-
-    const myFunc = (text) => {
-        navigation.navigate('Councelling');
-        console.log(text);
-    }
+const CourseComp = ({navigation}) => {
     return (
         <View style={styles.main}>
             
             <TouchableOpacity 
-            onPress={() => myFunc("test")}
+            onPress={() => navigation.navigate('Councelling')}
             >
                 <LinearGradient
                     colors={['#3BA9FE', '#3BA9FE']}

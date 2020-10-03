@@ -3,39 +3,50 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
-import { ScrollView } from 'react-native-gesture-handler';
 
-const Councelling = ({ navigation, route }) => {
+const Paper = ({ navigation, route }) => {
     const { thread } = route.params;
     const [data, setData] = useState('');
-    const [partdata, setPartdata] = useState('');
-    const { usremail } = route.params;
-    const { usrpass } = route.params;
-    console.log(usremail,usrpass);
-
+   const { threadname} = route.params;
     const renderer = ({ item, index }) => {
-        return (
-            <View style={{ borderBottomColor: '#fff', borderBottomWidth: 1, borderWidth: 1, margin: 15 }}>
-                <TouchableOpacity onPress={() => navigation.navigate('Paper', { thread: item.tno, threadname: item.tname })}>
-                    <Text style={{ textAlign: 'center', color: 'blue', fontWeight: '800', fontSize: 24 }}>{item.tname}</Text>
-                </TouchableOpacity>
-            </View>
-        )
+        if (item.id!=null) {
+            return (
+                <View style={{
+                    marginTop: 10, width: 150, height: 150, backgroundColor: "purple", borderRadius: 20, margin: 15, marginBottom: 5,
+                    shadowColor: "#000",
+                    shadowOffset: {
+                        width: 0,
+                        height: 3,
+                    },
+                    shadowOpacity: 0.37,
+                    shadowRadius: 3.49,
+    
+                    elevation: 5,
+                }}>
+                    <Text style={{ textAlign: 'center', color: 'white', fontWeight: '800', fontSize: 22 }}>Mock Test</Text>
+                    <Text style={{ color: 'white', fontWeight: '800', fontSize: 22 }}>Paper !</Text>
+    
+    
+                    <View style={{ borderBottomColor: '#fff', borderBottomWidth: 1, borderWidth: 1, margin: 15 }}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Pdf', { thread: item.id, })}>
+                            <Text style={{ textAlign: 'center', color: '#fff', fontWeight: '800', fontSize: 24 }}>{item.name}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            )
+        }else{
+            return(
+                <Text style={{ textAlign: 'center', color: 'red', fontWeight: '800', fontSize: 22,justifyContent:'center' }}>Nothing Here!</Text>
+            )
+        }
+       
     }
     useEffect(() => {
-        const Listener = fetch(`http://helixsmartlabs.in/app/dashboard/tab.php?sno=${thread}`)
+        const Listener = fetch(`http://helixsmartlabs.in/app/dashboard/papers.php?tno=${thread}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 setData(responseJson);
-               
-            }).catch((error) => {
-                console.log("Data fetching failed");
-            });
-        const Listen = fetch(`http://helixsmartlabs.in/portfolio/app/loginapi/login.php?email=${usremail}&password=${usrpass}`)
-            .then((response) => response.json())
-            .then((responseJson) => {
-             setPartdata(...responseJson);
-             console.log(partdata);
+                console.log(data);
             }).catch((error) => {
                 console.log("Data fetching failed");
             });
@@ -44,7 +55,7 @@ const Councelling = ({ navigation, route }) => {
         <View style={styles.main}>
             <View style={styles.nav}>
                 <View style={styles.user}>
-    <Text style={styles.usrTxt}>Hello {partdata.username}</Text>
+                    <Text style={styles.usrTxt}> {threadname} </Text>
                 </View>
                 <View style={styles.rightNotification}>
                     <Image
@@ -60,25 +71,14 @@ const Councelling = ({ navigation, route }) => {
                 />
             </View>
             <View style={styles.body}>
-                <Text style={styles.txt1}>Select Councelling Process</Text>
+                <Text style={styles.txt1}>Choose Papers</Text>
 
-                <View style={styles.tab}>
-                    <LinearGradient
-                        colors={['#36D1DC', '#5B86E5']}
-                        style={styles.btn1}
-                        start={[0, 0]}
-                        end={[1, 1]}
-                    >
-                        <ScrollView>
-                            <FlatList
-                                data={data}
-                                keyExtractor={(item) => item.tno}
-                                renderItem={renderer}
-                            />
-                        </ScrollView>
-                    </LinearGradient>
-                </View>
-
+                <FlatList
+                    data={data}
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderer}
+                    numColumns={2}
+                />
             </View>
         </View>
     );
@@ -120,27 +120,7 @@ const styles = StyleSheet.create({
         paddingRight: 10
     }, txt1: {
         fontSize: 24
-    }, tab: {
-        backgroundColor: "white",
-        width: "100%",
-        height: "70%",
-        marginBottom: 10,
-        marginTop: 10,
-        borderRadius: 20,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
-        shadowOpacity: 0.37,
-        shadowRadius: 3.49,
-
-        elevation: 5,
-    }, btn1: {
-        width: "100%",
-        height: "100%",
-        borderRadius: 20
-    }
+    },
 });
 
-export default Councelling
+export default Paper

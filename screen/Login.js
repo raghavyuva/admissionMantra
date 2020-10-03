@@ -4,12 +4,12 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput } from 'reac
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 
-const Login = props => {
-    const { navigation } = props
+const Login = ({navigation,route}) => {
+  
     const [usrinp, updateUsrInp] = useState('');
     const [usrpass, updateUsrPass] = useState('');
     const [data, setData] = useState([]);
-
+   const [user,setUser] = useState(null);
     const changeone = (txt1) => {
         updateUsrInp(txt1);
     }
@@ -22,14 +22,13 @@ const Login = props => {
         if (txt == 0) {
             alert("Incorrect Credentials");
         } else {
-            navigation.navigate('Course');
+            navigation.navigate('Course',{useremail:usrinp,userpass:usrpass});
         }
 
     }
     const updateData = (t1, t2) => {
-        console.log("http://helixsmartlabs.in/portfolio/app/loginapi/login.php?email=" + t1 + "&password=" + t2);
-        console.log(usrinp);
-        console.log(usrpass);
+        setUser("http://helixsmartlabs.in/portfolio/app/loginapi/login.php?email=" + t1 + "&password=" + t2);
+        console.log(user);
         fetch("http://helixsmartlabs.in/portfolio/app/loginapi/login.php?email=" + t1 + "&password=" + t2)
             .then((response) => response.json())
             .then((response) => myFunc(response[0].id))
