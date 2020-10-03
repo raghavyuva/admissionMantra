@@ -7,10 +7,10 @@ import Top from './Top';
 const Councelling = props => {
     const { navigation } = props
     return (
-        <View>
+        <View style={styles.main}>
             <View style={styles.nav}>
                 <View style={styles.user}>
-                    <Text style={styles.usrTxt}>Hello Dhruv</Text>
+                    <Text style={styles.usrTxt}>Hello Dhruv!</Text>
                 </View>
                 <View style={styles.rightNotification}>
                     <Image
@@ -19,19 +19,51 @@ const Councelling = props => {
                     />
                 </View>
             </View>
-            <View></View>
-            <View></View>
+            <View style={styles.banner}>
+                <Image
+                    source={require('../assets/banner.png')}
+                    style={styles.logo}
+                />
+            </View>
+            <View style={styles.body}>
+                <Text style={styles.txt1}>Select Councelling Process</Text>
+                
+                    <View style={styles.tab}>
+                    <LinearGradient
+                            colors={['#36D1DC', '#5B86E5']}
+                            style={styles.btn1}
+                            start={[0, 0]}
+                            end={[1, 1]}
+                        >
+                         
+                    </LinearGradient>
+                    </View>
+               
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    nav: { marginTop: 30, flexDirection: "row", justifyContent: "space-between", marginLeft: 10, marginRight: 10 },
-    user: {},
-    usrTxt: { fontSize: 28 },
+    main: { height: "100%", backgroundColor: "white" },
+    nav: { marginTop: 26, flexDirection: "row", justifyContent: "space-between", marginLeft: 10, marginRight: 10, height: "10%", },
+    logo: { width: "90%", height: "90%", borderRadius: 20, },
+    banner: {
+        justifyContent: "center", alignItems: "center",
+        height: "25%", marginLeft: 10, marginRight: 10, borderRadius: 20, backgroundColor: "white",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    usrTxt: { fontSize: 32, fontWeight: "600" },
     notification: { width: 24, height: 24, padding: 10 },
     rightNotification: {
-        width: 34, height: 34,alignItems: "center", justifyContent: "center", shadowColor: "#000",
+        width: 34, height: 34, alignItems: "center", justifyContent: "center", shadowColor: "#000",
         shadowOffset: {
             width: 0,
             height: 6,
@@ -40,6 +72,34 @@ const styles = StyleSheet.create({
         shadowRadius: 7.49,
 
         elevation: 12,
+    },
+    body: {
+        height: "65%",
+        paddingTop: 30,
+        paddingLeft: 10,
+        paddingRight:10
+    }, txt1: {
+        fontSize: 24
+    }, tab: {
+        backgroundColor: "white",
+        width: "100%",
+        height: "70%",
+        marginBottom:10,
+        marginTop: 10,
+        borderRadius: 20,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.37,
+        shadowRadius: 3.49,
+
+        elevation: 5,
+    },btn1:{
+        width:"100%",
+        height:"100%",
+        borderRadius:20
     }
 });
 
