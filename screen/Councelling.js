@@ -4,7 +4,8 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 
-const Councelling = () => {
+const Councelling = props => {
+    const { navigation } = props
     return (
         <View>
             <View style={styles.nav}>

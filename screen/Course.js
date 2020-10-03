@@ -2,8 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import CourseComp from './CourseComp';
 
-const Course = () => {
+const Course = ({ navigation }) => {
+
     return (
         <View style={styles.main}>
             <View style={styles.top}>
@@ -15,31 +17,11 @@ const Course = () => {
                     />
                 </View>
             </View>
+
+
             <View style={styles.list}>
-                <View><Text style={styles.category}>Medical & Dental UG</Text></View>
                 <View style={styles.stream}>
-
-                    <TouchableOpacity style={styles.itm1}>
-                        <LinearGradient
-                            colors={['#3BA9FE', '#3BA9FE']}
-                            style={styles.btn1}
-                            start={[0, 0]}
-                            end={[1, 1]}
-                        >
-                            <Text style={styles.btntxt}>MBBS</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.itm2}>
-                        <LinearGradient
-                            colors={['#2BB7BA', '#5AE5E7']}
-                            style={styles.btn2}
-                            start={[0, 0]}
-                            end={[1, 1]}
-                        ><Text style={styles.btntxt}>BDS</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-
+                    <CourseComp />
                 </View>
             </View>
 
@@ -48,7 +30,7 @@ const Course = () => {
 }
 
 const styles = StyleSheet.create({
-    main: {backgroundColor:"white", height:"100%"},
+    main: { backgroundColor: "white", height: "100%" },
     top: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
     course: { fontSize: 26 },
     topImg: { width: 212, height: 230 },
