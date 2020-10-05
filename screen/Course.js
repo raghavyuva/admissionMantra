@@ -5,11 +5,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import CourseComp from './CourseComp';
 import { ScrollView } from 'react-native-gesture-handler';
 
-const Course = ({ navigation,route }) => {
+const Course = ({ navigation, route }) => {
     const [data, setData] = useState('');
-    const { useremail} = route.params;
-    const { userpass} = route.params;
- const   email = [useremail]
+    const { useremail } = route.params;
+    const { userpass } = route.params;
     useEffect(() => {
         const Listener = fetch('http://helixsmartlabs.in/app/dashboard/stream.php')
             .then((response) => response.json())
@@ -21,13 +20,20 @@ const Course = ({ navigation,route }) => {
                 console.log("Data fetching failed");
             });
     }, []);
-    const renderer = ({ item, index,useremail }) => {
+    const renderer = ({ item, index, }) => {
         if (item.id % 2 == 0) {
-            console.log(useremail)
             return (
                 <ScrollView>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('Councelling', { thread: item.sno,usremail:useremail,usrpass:userpass })}
+                        onPress={() => navigation.navigate('tab',
+                            {
+                                screen: 'Home',
+                                params: {
+                                    thread: item.sno, usremail: useremail, usrpass: userpass
+                                }
+                            }
+
+                        )}
                     >
                         <LinearGradient
                             colors={['#3BA9FE', '#3BA9']}
@@ -46,7 +52,15 @@ const Course = ({ navigation,route }) => {
             return (
                 <ScrollView>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('Councelling', { thread: item.sno })}
+                        onPress={() => navigation.navigate('tab',
+                            {
+                                screen: 'Home',
+                                params: {
+                                    thread: item.sno, usremail: useremail, usrpass: userpass
+                                }
+                            }
+
+                        )}
                     >
                         <LinearGradient
                             colors={['#3BA9FE', '#3BA9']}

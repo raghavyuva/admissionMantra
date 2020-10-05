@@ -4,14 +4,13 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 import { ScrollView } from 'react-native-gesture-handler';
-
 const Councelling = ({ navigation, route }) => {
     const { thread } = route.params;
     const [data, setData] = useState('');
     const [partdata, setPartdata] = useState('');
     const { usremail } = route.params;
     const { usrpass } = route.params;
-    console.log(usremail,usrpass);
+    console.log(route);
 
     const renderer = ({ item, index }) => {
         return (
