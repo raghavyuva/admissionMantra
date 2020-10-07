@@ -10,12 +10,19 @@ const Councelling = ({ navigation, route }) => {
     const [partdata, setPartdata] = useState('');
     const { usremail } = route.params;
     const { usrpass } = route.params;
-    console.log(route);
 
     const renderer = ({ item, index }) => {
         return (
             <View style={{ borderBottomColor: '#fff', borderBottomWidth: 1, borderWidth: 1, margin: 15 }}>
-                <TouchableOpacity onPress={() => navigation.navigate('Paper', { thread: item.tno, threadname: item.tname })}>
+                <TouchableOpacity onPress={() => navigation.navigate('coursestack',
+                            {
+                                screen: 'Paper',
+                                params: {
+                                    thread: item.tno, threadname:item.tname
+                                }
+                            }
+
+                        )}>
                     <Text style={{ textAlign: 'center', color: 'blue', fontWeight: '800', fontSize: 24 }}>{item.tname}</Text>
                 </TouchableOpacity>
             </View>
@@ -26,15 +33,15 @@ const Councelling = ({ navigation, route }) => {
             .then((response) => response.json())
             .then((responseJson) => {
                 setData(responseJson);
-               
+
             }).catch((error) => {
                 console.log("Data fetching failed");
             });
         const Listen = fetch(`http://helixsmartlabs.in/portfolio/app/loginapi/login.php?email=${usremail}&password=${usrpass}`)
             .then((response) => response.json())
             .then((responseJson) => {
-             setPartdata(...responseJson);
-             console.log(partdata);
+                setPartdata(...responseJson);
+                console.log(partdata);
             }).catch((error) => {
                 console.log("Data fetching failed");
             });
@@ -43,13 +50,17 @@ const Councelling = ({ navigation, route }) => {
         <View style={styles.main}>
             <View style={styles.nav}>
                 <View style={styles.user}>
-    <Text style={styles.usrTxt}>Hello {partdata.username}</Text>
+                    <Text style={styles.usrTxt}>Hello {partdata.username}</Text>
                 </View>
                 <View style={styles.rightNotification}>
-                    <Image
-                        source={require('../assets/notification.png')}
-                        style={styles.notification}
-                    />
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('another', { screen: "notify" });
+                    }}>
+                        <Image
+                            source={require('../assets/notification.png')}
+                            style={styles.notification}
+                        />
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.banner}>

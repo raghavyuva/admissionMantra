@@ -7,8 +7,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 const Course = ({ navigation, route }) => {
     const [data, setData] = useState('');
-    const { useremail } = route.params;
-    const { userpass } = route.params;
     useEffect(() => {
         const Listener = fetch('http://helixsmartlabs.in/app/dashboard/stream.php')
             .then((response) => response.json())
@@ -25,11 +23,11 @@ const Course = ({ navigation, route }) => {
             return (
                 <ScrollView>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('tab',
+                        onPress={() => navigation.navigate('another',
                             {
-                                screen: 'Home',
+                                screen: 'councelling',
                                 params: {
-                                    thread: item.sno, usremail: useremail, usrpass: userpass
+                                    thread: item.sno,
                                 }
                             }
 
@@ -52,11 +50,11 @@ const Course = ({ navigation, route }) => {
             return (
                 <ScrollView>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('tab',
+                        onPress={() => navigation.navigate('another',
                             {
-                                screen: 'Home',
+                                screen: 'councelling',
                                 params: {
-                                    thread: item.sno, usremail: useremail, usrpass: userpass
+                                    thread: item.sno,
                                 }
                             }
 
@@ -79,6 +77,7 @@ const Course = ({ navigation, route }) => {
     }
     return (
         <View style={styles.main}>
+           
             <View style={styles.top}>
                 <View style={styles.left}><Text style={styles.course}>  COURSES</Text></View>
                 <View style={styles.right}>
@@ -95,7 +94,6 @@ const Course = ({ navigation, route }) => {
                         keyExtractor={(item) => item.sno}
                         renderItem={renderer}
                         numColumns={2}
-                        extraData={useremail}
                     />
                 </View>
             </View>
@@ -114,7 +112,9 @@ const styles = StyleSheet.create({
     btn2: { width: 150, margin: "5%", padding: 7, alignItems: 'center', borderRadius: 6 },
     category: { fontSize: 18, marginLeft: 5 },
     stream: { flexDirection: "column", justifyContent: "space-around" },
-    list: { marginTop: 20 }
+    list: { marginTop: 20 },
+
+
 });
 
 export default Course

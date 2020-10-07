@@ -5,7 +5,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 
 
-
 const CourseComp = ({navigation}) => {
     return (
         <View style={styles.main}>

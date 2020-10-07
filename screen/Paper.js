@@ -3,13 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
+import MarqueeText from 'react-native-marquee';
 
 const Paper = ({ navigation, route }) => {
     const { thread } = route.params;
     const [data, setData] = useState('');
-   const { threadname} = route.params;
+    const [notify, setNotify] = useState('');
+    const { threadname } = route.params;
     const renderer = ({ item, index }) => {
-        if (item.id!=null) {
+        if (item.id != null) {
             return (
                 <View style={{
                     marginTop: 10, width: 150, height: 150, backgroundColor: "purple", borderRadius: 20, margin: 15, marginBottom: 5,
@@ -20,13 +22,14 @@ const Paper = ({ navigation, route }) => {
                     },
                     shadowOpacity: 0.37,
                     shadowRadius: 3.49,
-    
+
                     elevation: 5,
                 }}>
+
                     <Text style={{ textAlign: 'center', color: 'white', fontWeight: '800', fontSize: 22 }}>Mock Test</Text>
                     <Text style={{ color: 'white', fontWeight: '800', fontSize: 22 }}>Paper !</Text>
-    
-    
+
+
                     <View style={{ borderBottomColor: '#fff', borderBottomWidth: 1, borderWidth: 1, margin: 15 }}>
                         <TouchableOpacity onPress={() => navigation.navigate('Pdf', { thread: item.id, })}>
                             <Text style={{ textAlign: 'center', color: '#fff', fontWeight: '800', fontSize: 24 }}>{item.name}</Text>
@@ -34,12 +37,12 @@ const Paper = ({ navigation, route }) => {
                     </View>
                 </View>
             )
-        }else{
-            return(
-                <Text style={{ textAlign: 'center', color: 'red', fontWeight: '800', fontSize: 22,justifyContent:'center' }}>Nothing Here!</Text>
+        } else {
+            return (
+                <Text style={{ textAlign: 'center', color: 'red', fontWeight: '800', fontSize: 22, justifyContent: 'center' }}>Nothing Here!</Text>
             )
         }
-       
+
     }
     useEffect(() => {
         const Listener = fetch(`http://helixsmartlabs.in/app/dashboard/papers.php?tno=${thread}`)
@@ -50,6 +53,11 @@ const Paper = ({ navigation, route }) => {
             }).catch((error) => {
                 console.log("Data fetching failed");
             });
+        const anotherlistener = fetch(`http://helixsmartlabs.in/app/dashboard/notice.php`)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                setNotify(...responseJson)
+            })
     }, []);
     return (
         <View style={styles.main}>
@@ -64,6 +72,16 @@ const Paper = ({ navigation, route }) => {
                     />
                 </View>
             </View>
+            <MarqueeText
+                style={{ fontSize: 18,color:'red' }}
+                duration={5000}
+                marqueeOnStart
+                loop
+                marqueeDelay={1000}
+                marqueeResetDelay={1000}
+            >
+                {notify.sno}:{notify.content}
+            </MarqueeText>
             <View style={styles.banner}>
                 <Image
                     source={require('../assets/banner.png')}

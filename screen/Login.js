@@ -1,11 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useDebugValue, useContext } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, KeyboardAvoidingView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
-
+import { AsyncStorage } from 'react-native';
+import { AuthContext } from '../navigation/AuthContext';
 const Login = ({ navigation, route }) => {
-
+    const { login } = useContext(AuthContext);
     const [usrinp, updateUsrInp] = useState('');
     const [usrpass, updateUsrPass] = useState('');
     const [data, setData] = useState([]);
@@ -17,18 +18,21 @@ const Login = ({ navigation, route }) => {
         updateUsrPass(txt2);
     }
 
-    const myFunc = (txt) => {
+    const myFunc = async (txt) => {
         console.log("My Value is " + txt);
         if (txt == 0) {
             alert("Incorrect Credentials");
         } else {
-            navigation.navigate('Course', { useremail: usrinp, userpass: usrpass });
+            try {
+                AsyncStorage.setItem('token', usrinp);
+            } catch (error) {
+                // Error saving data  
+            }
+
         }
 
     }
     const updateData = (t1, t2) => {
-        setUser("http://helixsmartlabs.in/app/dashboard/login.php?email=" + t1 + "&password=" + t2);
-        console.log(user);
         fetch("http://helixsmartlabs.in/app/dashboard/login.php?email=" + t1 + "&password=" + t2)
             .then((response) => response.json())
             .then((response) => myFunc(response[0].id))
