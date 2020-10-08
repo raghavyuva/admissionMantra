@@ -5,15 +5,14 @@ import Main from './screen/Main';
 import Login from './screen/Login';
 import Course from './screen/Course';
 import Councelling from './screen/Councelling';
+import { Provider } from "react-redux";
 console.disableYellowBox = true;
 import MainStackNavigator from './navigation/MainStackNavigator'
-import { AuthProvider } from './navigation/AuthContext'
 export default function App() {
   return (
-    <AuthProvider>
+    
       <MainStackNavigator />
-    </AuthProvider>
-
+     
   );
 
 

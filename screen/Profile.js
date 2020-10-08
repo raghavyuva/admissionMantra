@@ -5,17 +5,21 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 import PDFReader from 'rn-pdf-reader-js'
 import { AsyncStorage } from 'react-native';
-import { AuthContext } from '../navigation/AuthContext';
+import { AuthContext } from "../navigation/context";
 
 const Profile = () => {
     const [data, setData] = useState('');
     const [password, setPassword] = useState("");
     const [newpassword, setNewpassword] = useState("");
     const [confirmpassword, setConfirmpassword] = useState("");
-    const { logout } = useContext(AuthContext);
+    const [tokenmail,setTokenmail] = useState('')
+    const { logout } = React.useContext(AuthContext)
 
     useEffect(() => {
-        const Listener = fetch(`http://helixsmartlabs.in/app/dashboard/profile.php?email=dhruvrohatgi53@gmail.com`)
+        AsyncStorage.getItem('token').then((token)=>{
+         setTokenmail(token)
+        })
+        const Listener = fetch(`http://helixsmartlabs.in/app/dashboard/profile.php?email=${tokenmail}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 setData(...responseJson);
@@ -23,13 +27,12 @@ const Profile = () => {
             }).catch((error) => {
                 console.log("Data fetching failed");
             });
-        return Listener;
     }, []);
     const Onlogout = () => {
-        AsyncStorage.removeItem('token');
+        logout();
     }
     const Listener = () => {
-        fetch(`http://helixsmartlabs.in/app/dashboard/profile.php?email=dhruvrohatgi53@gmail.com`)
+        fetch(`http://helixsmartlabs.in/app/dashboard/profile.php?email=${tokenmail}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 setData(...responseJson);
@@ -68,13 +71,13 @@ const Profile = () => {
             <View style={styles.main}>
                 <View style={{ margin: 20, height: '30%', }}>
                     <View style={{ marginTop: 10 }}>
-                        <Text style={{ textAlign: 'Left', color: 'grey', fontWeight: '500', fontSize: 16 }}>First Name</Text>
+                        <Text style={{ textAlign: 'left', color: 'grey', fontWeight: '500', fontSize: 16 }}>First Name</Text>
                         <View style={{ marginTop: 5, width: "100%", padding: 5, borderRadius: 7, borderWidth: 2, borderColor: "grey", borderStyle: "dashed", backgroundColor: "#ccc" }}>
                             <Text style={{ fontSize: 20, fontWeight: '400' }}>{data.fname}</Text>
                         </View>
                     </View>
                     <View style={{ marginTop: 10 }}>
-                        <Text style={{ textAlign: 'Left', color: 'grey', fontWeight: '500', fontSize: 16 }}>Last Name</Text>
+                        <Text style={{ textAlign: 'left', color: 'grey', fontWeight: '500', fontSize: 16 }}>Last Name</Text>
                         <View style={{ marginTop: 5, width: "100%", padding: 5, borderRadius: 7, borderWidth: 2, borderColor: "grey", borderStyle: "dashed", backgroundColor: "#ccc" }}>
                             <Text style={{ fontSize: 20, fontWeight: '400' }}>{data.lname}</Text>
                         </View>
@@ -82,7 +85,7 @@ const Profile = () => {
                     <View style={{ marginTop: 10 }}>
                         <Text style={{ textAlign: 'left', color: 'grey', fontWeight: '500', fontSize: 16 }}>Email</Text>
                         <View style={{ marginTop: 5, width: "100%", padding: 5, borderRadius: 7, borderWidth: 2, borderColor: "grey", borderStyle: "dashed", backgroundColor: "#ccc" }}>
-                            <Text style={{ fontSize: 20, fontWeight: '400' }}>{data.email}</Text>
+                            <Text style={{ fontSize: 20, fontWeight: '400' }}>{tokenmail}</Text>
                         </View>
                     </View>
                 </View>
@@ -94,19 +97,19 @@ const Profile = () => {
                         value={password}
                         onChangeText={(userPassword) => setPassword(userPassword)}
                     />
-                    <View style={{flexDirection:"row"}}>
-                    <TextInput
-                        style={{ marginTop: 15, borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "50%", paddingLeft: 0, paddingTop: 10, paddingRight: 10, fontSize: 18, marginRight:5 }}
-                        placeholder="New Password"
-                        value={newpassword}
-                        onChangeText={(userPassword) => setNewpassword(userPassword)}
-                    />
-                    <TextInput
-                        style={{ marginTop: 15, borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "50%", paddingLeft: 0, paddingTop: 10, paddingRight: 10, fontSize: 18,marginLeft:5 }}
-                        placeholder="Confirm Password"
-                        value={confirmpassword}
-                        onChangeText={(userPassword) => setConfirmpassword(userPassword)}
-                    />
+                    <View style={{ flexDirection: "row" }}>
+                        <TextInput
+                            style={{ marginTop: 15, borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "50%", paddingLeft: 0, paddingTop: 10, paddingRight: 10, fontSize: 18, marginRight: 5 }}
+                            placeholder="New Password"
+                            value={newpassword}
+                            onChangeText={(userPassword) => setNewpassword(userPassword)}
+                        />
+                        <TextInput
+                            style={{ marginTop: 15, borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "50%", paddingLeft: 0, paddingTop: 10, paddingRight: 10, fontSize: 18, marginLeft: 5 }}
+                            placeholder="Confirm Password"
+                            value={confirmpassword}
+                            onChangeText={(userPassword) => setConfirmpassword(userPassword)}
+                        />
                     </View>
                     <TouchableOpacity
                         onPress={Onsubmit}

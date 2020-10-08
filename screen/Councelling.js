@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 import { ScrollView } from 'react-native-gesture-handler';
+import { AsyncStorage, ActivityIndicator } from 'react-native';
+
 const Councelling = ({ navigation, route }) => {
     const { thread } = route.params;
     const [data, setData] = useState('');

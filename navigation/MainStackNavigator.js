@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useMemo } from "react";
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -15,8 +15,8 @@ import Profile from '../screen/Profile';
 import Register from '../screen/Register';
 import Forgot from '../screen/Forgot';
 import Notification from '../screen/Notification';
-import { AsyncStorage } from 'react-native';
-import { AuthContext } from './AuthContext';
+import { AsyncStorage, ActivityIndicator, View } from 'react-native';
+import { AuthContext } from "./context";
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator();
 const Rootstack = () => {
@@ -89,24 +89,44 @@ const Homestack = () => {
             <Stack.Screen name='coursestack' component={coursestack} />
             <Stack.Screen name='another' component={anotherstack} />
         </Stack.Navigator>
-    ) 
+    )
 }
 const MainStackNavigator = () => {
     const [hastoken, setHastoken] = useState('');
-    const { user, setUser } = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
-    console.log(user)
+    const authContext = React.useMemo(() => ({
+        signIn: (usrinp) => {
+            AsyncStorage.setItem('token', usrinp)
+            setHastoken(true);
+        },
+        logout: () => {
+            AsyncStorage.removeItem('token')
+            setHastoken(false)
+        }
+    }))
     useEffect(() => {
-        AsyncStorage.getItem("token").then((token) => {
+        setTimeout(() => {
+            setLoading(false)
+        }, 1500)
+        const listener = AsyncStorage.getItem("token").then((token) => {
             setHastoken(token !== null)
         })
+
     }, [])
+    if (loading) {
+        return (
+            <View style={{ justifyContent: "center", flex: 1 }}>
+                <ActivityIndicator size={100} color={'#5B86E5'} style={{ alignSelf: 'center' }} />
+            </View>
+
+        )
+    }
     return (
-        <NavigationContainer>
-            <Stack.Navigator headerMode='none'>
-                {hastoken ? <Stack.Screen name='home' component={Homestack} /> : <Stack.Screen name='root' component={Rootstack} />}
-            </Stack.Navigator>
-        </NavigationContainer>
+        <AuthContext.Provider value={authContext}>
+            <NavigationContainer>
+                {hastoken ? <Homestack /> : <Rootstack />}
+            </NavigationContainer>
+        </AuthContext.Provider>
     )
 }
 

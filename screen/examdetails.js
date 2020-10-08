@@ -4,9 +4,11 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 import PDFReader from 'rn-pdf-reader-js'
+import { usePreventScreenCapture } from 'expo-screen-capture';
 
 const Exam = () => {
     const [data, setData] = useState('');
+    usePreventScreenCapture();
     return (
         <PDFReader
         source={{

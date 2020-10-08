@@ -4,9 +4,8 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, KeyboardAvo
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 import { AsyncStorage } from 'react-native';
-import { AuthContext } from '../navigation/AuthContext';
+import { AuthContext } from "../navigation/context";
 const Login = ({ navigation, route }) => {
-    const { login } = useContext(AuthContext);
     const [usrinp, updateUsrInp] = useState('');
     const [usrpass, updateUsrPass] = useState('');
     const [data, setData] = useState([]);
@@ -17,14 +16,14 @@ const Login = ({ navigation, route }) => {
     const changetwo = (txt2) => {
         updateUsrPass(txt2);
     }
-
+    const { signIn } = React.useContext(AuthContext)
     const myFunc = async (txt) => {
         console.log("My Value is " + txt);
         if (txt == 0) {
             alert("Incorrect Credentials");
         } else {
             try {
-                AsyncStorage.setItem('token', usrinp);
+              signIn(usrinp)
             } catch (error) {
                 // Error saving data  
             }
@@ -41,7 +40,6 @@ const Login = ({ navigation, route }) => {
     const showVal = () => {
         console.log([...data[0].id]);
     }
-
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS == 'ios' ? 'padding' : 'height'}

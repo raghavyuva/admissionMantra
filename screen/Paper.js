@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 import MarqueeText from 'react-native-marquee';
 import { usePreventScreenCapture } from 'expo-screen-capture';
+import { ScrollView } from 'react-native-gesture-handler';
 const Paper = ({ navigation, route }) => {
     usePreventScreenCapture();
     const { thread } = route.params;
@@ -50,12 +51,30 @@ const Paper = ({ navigation, route }) => {
             }).catch((error) => {
                 console.log("Data fetching failed");
             });
-        const anotherlistener = fetch(`http://helixsmartlabs.in/app/dashboard/notice.php`)
+        const anotherlistener = fetch(`http://helixsmartlabs.in/app/dashboard/marquee.php`)
             .then((response) => response.json())
             .then((responseJson) => {
-                setNotify(...responseJson)
+                setNotify(responseJson)
             })
     }, []);
+    usePreventScreenCapture();
+    const scrollingmarquee = ({ item, index }) => {
+        return (
+            <View>
+                <MarqueeText
+                    style={{ fontSize: 18, color: '#01a0fa', marginBottom: 15 }}
+                    duration={8000}
+                    marqueeOnStart={true} 
+                    marqueeDelay={1000}
+                    marqueeResetDelay={1000}
+                    loop 
+                >
+                  1.{item.title0}      2.{item.title1}
+                </MarqueeText>
+            </View>
+
+        )
+    }
     return (
         <View style={styles.main}>
             <View style={styles.nav}>
@@ -72,33 +91,35 @@ const Paper = ({ navigation, route }) => {
                         />
                     </TouchableOpacity>
                 </View>
+
             </View>
-            <MarqueeText
-                style={{ fontSize: 18, color: '#01a0fa', marginBottom: 15 }}
-                duration={1000}
-                marqueeOnStart
-                loop
-                marqueeDelay={500}
-                marqueeResetDelay={100}
-            >
-                {notify.content}
-            </MarqueeText>
+            <View>
+                <FlatList
+                    data={notify}
+                    keyExtractor={(item) => item.sno}
+                    renderItem={scrollingmarquee}
+                   
+                />
+            </View>
             <View style={styles.banner}>
                 <Image
                     source={require('../assets/banner.png')}
                     style={styles.logo}
                 />
             </View>
+
             <View style={styles.body}>
                 <Text style={styles.mainText}>Documents</Text>
+                <ScrollView >
+                    <FlatList
+                        data={data}
+                        keyExtractor={(item) => item.id}
+                        renderItem={renderer}
+                        numColumns={2}
 
-                <FlatList
-                    data={data}
-                    keyExtractor={(item) => item.id}
-                    renderItem={renderer}
-                    numColumns={2}
+                    />
+                </ScrollView>
 
-                />
             </View>
         </View>
     );
