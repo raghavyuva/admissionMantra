@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect, useContext } from 'react';
-import { StyleSheet, FlatList, ScrollView, Dimensions, Share, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, FlatList, ScrollView, Dimensions, Share, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView,ActivityIndicator } from 'react-native';
 import { EvilIcons, AntDesign, FontAwesome5, MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
@@ -12,21 +12,24 @@ const Profile = () => {
     const [password, setPassword] = useState("");
     const [newpassword, setNewpassword] = useState("");
     const [confirmpassword, setConfirmpassword] = useState("");
-    const [tokenmail,setTokenmail] = useState('')
+    const [tokenmail, setTokenmail] = useState('')
+    const [loading, setLoading] = useState(true);
     const { logout } = React.useContext(AuthContext)
-
     useEffect(() => {
-        AsyncStorage.getItem('token').then((token)=>{
-         setTokenmail(token)
-        })
-        const Listener = fetch(`http://helixsmartlabs.in/app/dashboard/profile.php?email=${tokenmail}`)
+        AsyncStorage.getItem('token').then((token) => {
+            setTokenmail(token)
+            const Listener = fetch(`http://helixsmartlabs.in/app/dashboard/profile.php?email=${token}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 setData(...responseJson);
-
             }).catch((error) => {
                 console.log("Data fetching failed");
+               
             });
+        })
+            setTimeout(()=>{
+                setLoading(false);
+               },2000)
     }, []);
     const Onlogout = () => {
         logout();
@@ -66,6 +69,13 @@ const Profile = () => {
             alert('current password is incorrect! ');
         }
     }
+     if (loading) {
+        return(
+          <View style={{ justifyContent: "center", flex: 1 }}>
+          <ActivityIndicator size={100} color={'#5B86E5'} style={{ alignSelf: 'center' }} />
+      </View>
+        )
+      }
     return (
         <KeyboardAvoidingView>
             <View style={styles.main}>
