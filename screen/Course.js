@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -13,7 +12,6 @@ const Course = ({ navigation, route }) => {
             .then((responseJson) => {
 
                 setData(responseJson);
-                console.log(data);
             }).catch((error) => {
                 console.log("Data fetching failed");
             });

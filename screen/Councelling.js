@@ -1,21 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 import { ScrollView } from 'react-native-gesture-handler';
 import { AsyncStorage, ActivityIndicator } from 'react-native';
-
+import { Avatar, Badge, Icon, withBadge } from 'react-native-elements'
+import { FontAwesome5 } from '@expo/vector-icons';
 const Councelling = ({ navigation, route }) => {
     const { thread } = route.params;
     const [data, setData] = useState('');
     const [partdata, setPartdata] = useState('');
     const { usremail } = route.params;
     const { usrpass } = route.params;
-
+    const [token, setToken] = useState('');
     const renderer = ({ item, index }) => {
         return (
-            <View style={{ borderColor: '#fff', borderWidth: 1, marginTop: 15, marginLeft:30, marginRight:30 }}>
+            <View style={{ borderColor: '#fff', borderWidth: 1, marginTop: 15, marginLeft: 30, marginRight: 30 }}>
                 <TouchableOpacity onPress={() => navigation.navigate('coursestack',
                     {
                         screen: 'Paper',
@@ -31,6 +31,9 @@ const Councelling = ({ navigation, route }) => {
         )
     }
     useEffect(() => {
+        AsyncStorage.getItem('token').then((token) => {
+            setToken(token)
+        })
         const Listener = fetch(`http://helixsmartlabs.in/app/dashboard/tab.php?sno=${thread}`)
             .then((response) => response.json())
             .then((responseJson) => {
@@ -54,15 +57,36 @@ const Councelling = ({ navigation, route }) => {
                 <View style={styles.user}>
                     <Text style={styles.usrTxt}>Hello {partdata.username}</Text>
                 </View>
+                <View>
+                    {token == 'raghavyuva@gmail.com' ? (
+                        <TouchableOpacity style={{marginTop:10}} onPress={()=>{
+                            navigation.navigate('admin')
+                        }}>
+                            <FontAwesome5 name="user-secret" size={28} color="green" />
+                        </TouchableOpacity>
+                    ) : (
+                            <View></View>
+                        )
+                    }
+                </View>
                 <View style={styles.rightNotification}>
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('another', { screen: "notify" });
-                    }}>
-                        <Image
+                    }}
+
+                    >
+                        <Avatar
+                            rounded
                             source={require('../assets/notification.png')}
-                            style={styles.notification}
+                            size="small"
+                        />
+
+                        <Badge
+                            status="error"
+                            containerStyle={{ position: 'absolute', top: -4, right: -4 }}
                         />
                     </TouchableOpacity>
+
                 </View>
             </View>
             <View style={styles.banner}>

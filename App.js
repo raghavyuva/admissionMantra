@@ -1,19 +1,60 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Main from './screen/Main';
-import Login from './screen/Login';
-import Course from './screen/Course';
-import Councelling from './screen/Councelling';
-import { Provider } from "react-redux";
-console.disableYellowBox = true;
+import React, { useEffect, useState, useRef } from 'react';
+import { StyleSheet, Text, View, LogBox } from 'react-native';
+import { AsyncStorage, ActivityIndicator } from 'react-native';
+LogBox.ignoreAllLogs(true);
+console.clear(true);
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 import MainStackNavigator from './navigation/MainStackNavigator'
 export default function App() {
-  return (
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [tokenmail, setTokenmail] = useState('');
+  const [data, setData] = useState('');
+  useEffect(() => {
+    AsyncStorage.getItem('token').then((token) => {
+      setTokenmail(token)
+    }) 
+      Listener()
+    registerForPushNotificationsAsync();
     
-      <MainStackNavigator />
-     
-  );
+  }, [])
+ 
 
-
+  const Listener = () => {
+    fetch(`http://helixsmartlabs.in/app/dashboard/profile.php?email=${tokenmail}`)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            setData(...responseJson);
+        }).catch((error) => {
+            console.log("Data fetching failed");
+        });
 }
+  const registerForPushNotificationsAsync =async () => {
+    let token;
+    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = await Notifications.getExpoPushTokenAsync()
+    setExpoPushToken(token)
+    fetch(`http://helixsmartlabs.in/app/dashboard/inserttoken.php?tkn=${token.data}`,
+    {
+        method: "GET",
+    })
+  }
+
+    return (
+      <MainStackNavigator />
+
+    );
+ 
+
+  }
+

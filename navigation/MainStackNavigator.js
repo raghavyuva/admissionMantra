@@ -17,6 +17,7 @@ import Forgot from '../screen/Forgot';
 import Notification from '../screen/Notification';
 import { AsyncStorage, ActivityIndicator, View } from 'react-native';
 import { AuthContext } from "./context";
+import Admin from "../screen/admin";
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator();
 const Rootstack = () => {
@@ -46,6 +47,7 @@ const anotherstack = () => {
         <Stack.Navigator headerMode='none'>
             <Stack.Screen name='councelling' component={Councelling} options={{ title: 'Dashboard' }} />
             <Stack.Screen name='notify' component={Notification} options={{ title: 'Dashboard' }} />
+            <Stack.Screen name='admin' component={Admin} options={{ title: 'Dashboard' }} />
         </Stack.Navigator>
     )
 }
