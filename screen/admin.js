@@ -6,7 +6,7 @@ const Admin = props => {
     const [body, setBody] = useState('');
     const [title, setTitle] = useState('');
     const [data, setData] = useState([]);
-    const [tokens, setTokens] = useState('');
+    const [tokenmail, setTokenmail] = useState('');
     const Onsubmit = () => {
         if (!title || !body) {
             alert('please enter the fields to continue');
@@ -18,34 +18,34 @@ const Admin = props => {
                         'Content-Type': 'application/json'
                     },
                     method: "POST",
-                    body: JSON.stringify({
-                        to: tokens,
+                    body: JSON.stringify({ 
+                        to:tokenmail,
                         sound: "default",
-                        body: `${body}`,
+                        body: `${body}`, 
                         title: `${title}`
                     }) 
-                })
-        }
+                }) 
+        }    
     } 
  
-    useEffect(() => { 
-        fetch(`http://helixsmartlabs.in/app/dashboard/fetchtoken.php`)
+    useEffect(() => {     
+        fetch(`http://helixsmartlabs.in/app/dashboard/fetchtoken.php`) 
         .then((response) => response.json())
         .then((responseJson) => { 
-            setData([...responseJson]);  
+            setData([...responseJson]);   
           
         }).catch((error) => { 
-            console.log("Data fetching failed"); 
+            console.log("Data fetching failed");  
         });
         Object.keys(data).map((key,index)=>{ 
-            setTokens(data[key].token)
-            console.log(tokens);
-        }) 
-    }, []) 
+            setTokenmail([data[index].token])
+            console.log(data[index].token);
+        })    
+    }, [])   
  
     return (
         <View style={styles.main}>
-            <Top />
+            <Top /> 
             <View style={styles.middle}>
                 <Text style={{ marginTop: 20, color: "#b3b3b3" }}>Title</Text>
                 <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 10, paddingRight: 10, fontSize: 18, }}
