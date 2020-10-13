@@ -12,25 +12,11 @@ export default function App() {
   const [tokenmail, setTokenmail] = useState('');
   const [data, setData] = useState('');
   useEffect(() => {
-    AsyncStorage.getItem('token').then((token) => {
-      setTokenmail(token)
-    }) 
-      Listener()
+    let isMounted = true;
     registerForPushNotificationsAsync();
-    
+    return () => { isMounted = false };
   }, [])
- 
-
-  const Listener = () => {
-    fetch(`http://helixsmartlabs.in/app/dashboard/profile.php?email=${tokenmail}`)
-        .then((response) => response.json())
-        .then((responseJson) => {
-            setData(...responseJson);
-        }).catch((error) => {
-            console.log("Data fetching failed");
-        });
-}
-  const registerForPushNotificationsAsync =async () => {
+  const registerForPushNotificationsAsync = async () => {
     let token;
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
     let finalStatus = existingStatus;
@@ -45,16 +31,15 @@ export default function App() {
     token = await Notifications.getExpoPushTokenAsync()
     setExpoPushToken(token)
     fetch(`http://helixsmartlabs.in/app/dashboard/inserttoken.php?tkn=${token.data}`,
-    {
+      {
         method: "GET",
-    })
+      })
   }
+  return (
+    <MainStackNavigator />
 
-    return (
-      <MainStackNavigator />
+  );
 
-    );
- 
 
-  }
+}
 

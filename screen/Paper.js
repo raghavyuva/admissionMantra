@@ -42,38 +42,24 @@ const Paper = ({ navigation, route }) => {
 
     }
     useEffect(() => {
+        let isMounted = true;
         const Listener = fetch(`http://helixsmartlabs.in/app/dashboard/papers.php?tno=${thread}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 setData(responseJson);
-                console.log(data);
             }).catch((error) => {
-                console.log("Data fetching failed");
+                alert("Data fetching failed");
             });
         const anotherlistener = fetch(`http://helixsmartlabs.in/app/dashboard/marquee.php`)
             .then((response) => response.json())
             .then((responseJson) => {
                 setNotify(responseJson)
+            }).catch((error) => {
+                alert("Data fetching failed");
             })
+        return () => { isMounted = false };
     }, []);
     usePreventScreenCapture();
-    const scrollingmarquee = ({ item, index }) => {
-        return (
-            <View>
-                <MarqueeText
-                    style={{ fontSize: 18, color: '#01a0fa', marginBottom: 15 }}
-                    duration={8000}
-                    marqueeOnStart={true} 
-                    marqueeDelay={1000}
-                    marqueeResetDelay={1000}
-                    loop 
-                >
-                  1.{item.title0}      2.{item.title1}
-                </MarqueeText>
-            </View>
-
-        )
-    }
     return (
         <View style={styles.main}>
             <View style={styles.nav}>
@@ -93,12 +79,6 @@ const Paper = ({ navigation, route }) => {
 
             </View>
             <View>
-                <FlatList
-                    data={notify}
-                    keyExtractor={(item) => item.sno}
-                    renderItem={scrollingmarquee}
-                   
-                />
             </View>
             <View style={styles.banner}>
                 <Image
@@ -109,15 +89,14 @@ const Paper = ({ navigation, route }) => {
 
             <View style={styles.body}>
                 <Text style={styles.mainText}>Documents</Text>
-                <ScrollView >
+                <View >
                     <FlatList
                         data={data}
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => item.tno}
                         renderItem={renderer}
                         numColumns={2}
-
                     />
-                </ScrollView>
+                </View>
 
             </View>
         </View>

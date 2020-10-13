@@ -22,7 +22,7 @@ const Login = ({ navigation, route }) => {
             alert("Incorrect Credentials");
         } else {
             try {
-              signIn(usrinp)
+                signIn(usrinp)
             } catch (error) {
                 // Error saving data  
             }

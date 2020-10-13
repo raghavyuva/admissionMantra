@@ -16,6 +16,7 @@ const Profile = () => {
     const [loading, setLoading] = useState(true);
     const { logout } = React.useContext(AuthContext)
     useEffect(() => {
+        let isMounted = true;
         AsyncStorage.getItem('token').then((token) => {
             setTokenmail(token)
             const Listener = fetch(`http://helixsmartlabs.in/app/dashboard/profile.php?email=${token}`)
@@ -23,13 +24,14 @@ const Profile = () => {
             .then((responseJson) => {
                 setData(...responseJson);
             }).catch((error) => {
-                console.log("Data fetching failed");
+                alert("Data fetching failed");
                
             });
         })
             setTimeout(()=>{
                 setLoading(false);
                },2000)
+               return () => { isMounted = false };
     }, []);
     const Onlogout = () => {
         logout();
@@ -41,8 +43,9 @@ const Profile = () => {
                 setData(...responseJson);
 
             }).catch((error) => {
-                console.log("Data fetching failed");
+                alert("Data fetching failed");
             });
+
     }
     const Onsubmit = () => {
         if (data.password == password) {

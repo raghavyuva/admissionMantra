@@ -11,6 +11,17 @@ const Admin = props => {
         if (!title || !body) {
             alert('please enter the fields to continue');
         } else {
+            fetch(`http://helixsmartlabs.in/app/dashboard/fetchtoken.php`)
+                .then((response) => response.json())
+                .then((responseJson) => {
+                    setData([...responseJson]);
+
+                }).catch((error) => {
+                    console.log("Data fetching failed");
+                });
+            Object.keys(data).map((key, index) => {
+                setTokenmail([data[index].token])
+            })
             fetch("https://exp.host/--/api/v2/push/send",
                 {
                     headers: {
@@ -18,34 +29,37 @@ const Admin = props => {
                         'Content-Type': 'application/json'
                     },
                     method: "POST",
-                    body: JSON.stringify({ 
-                        to:tokenmail,
-                        sound: "default",
-                        body: `${body}`, 
+                    body: JSON.stringify({
+                        to: tokenmail,
+                        sound: 'default',
+                        vibrationPattern: [0, 250, 250, 250],
+                        lightColor: '#FF231F7C',
+                        body: `${body}`,
                         title: `${title}`
-                    }) 
-                }) 
-        }    
-    } 
- 
-    useEffect(() => {     
-        fetch(`http://helixsmartlabs.in/app/dashboard/fetchtoken.php`) 
-        .then((response) => response.json())
-        .then((responseJson) => { 
-            setData([...responseJson]);   
-          
-        }).catch((error) => { 
-            console.log("Data fetching failed");  
-        });
-        Object.keys(data).map((key,index)=>{ 
+                    })
+                })
+        }
+    }
+
+    useEffect(() => {
+        let isMounted = true;
+        fetch(`http://helixsmartlabs.in/app/dashboard/fetchtoken.php`)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                setData([...responseJson]);
+
+            }).catch((error) => {
+                alert("Data fetching failed");
+            });
+        Object.keys(data).map((key, index) => {
             setTokenmail([data[index].token])
-            console.log(data[index].token);
-        })    
-    }, [])   
- 
+        })
+        return () => { isMounted = false };
+    }, [])
+
     return (
         <View style={styles.main}>
-            <Top /> 
+            <Top />
             <View style={styles.middle}>
                 <Text style={{ marginTop: 20, color: "#b3b3b3" }}>Title</Text>
                 <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 10, paddingRight: 10, fontSize: 18, }}

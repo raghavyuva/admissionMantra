@@ -7,14 +7,16 @@ import { ScrollView } from 'react-native-gesture-handler';
 const Course = ({ navigation, route }) => {
     const [data, setData] = useState('');
     useEffect(() => {
+        let isMounted = true;
         const Listener = fetch('http://helixsmartlabs.in/app/dashboard/stream.php')
             .then((response) => response.json())
             .then((responseJson) => {
 
                 setData(responseJson);
             }).catch((error) => {
-                console.log("Data fetching failed");
+                alert("Data fetching failed");
             });
+        return () => { isMounted = false };
     }, []);
     const renderer = ({ item, index, }) => {
         if (item.id % 2 == 0) {

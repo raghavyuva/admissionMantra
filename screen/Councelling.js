@@ -31,6 +31,7 @@ const Councelling = ({ navigation, route }) => {
         )
     }
     useEffect(() => {
+        let isMounted = true;
         AsyncStorage.getItem('token').then((token) => {
             setToken(token)
         })
@@ -50,6 +51,7 @@ const Councelling = ({ navigation, route }) => {
             }).catch((error) => {
                 console.log("Data fetching failed");
             });
+        return () => { isMounted = false };
     }, []);
     return (
         <View style={styles.main}>
@@ -59,7 +61,7 @@ const Councelling = ({ navigation, route }) => {
                 </View>
                 <View>
                     {token == 'raghavyuva@gmail.com' ? (
-                        <TouchableOpacity style={{marginTop:10}} onPress={()=>{
+                        <TouchableOpacity style={{ marginTop: 10 }} onPress={() => {
                             navigation.navigate('admin')
                         }}>
                             <FontAwesome5 name="user-secret" size={28} color="green" />

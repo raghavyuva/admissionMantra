@@ -19,10 +19,10 @@ const Forgot = ({ navigation, route }) => {
         if (txt == 1) {
             alert("Please check your Email for new password!");
             navigation.navigate('Login');
-        } else if(txt == 2){
+        } else if (txt == 2) {
             alert("User not Found! Please register to continue.");
             navigation.navigate('Register');
-        }else{
+        } else {
             alert("Please try again later");
             navigation.navigate('Main');
         }
@@ -54,8 +54,8 @@ const Forgot = ({ navigation, route }) => {
                         onSubmitEditing={() => { this.secondTextInput.focus(); }}
                         blurOnSubmit={false}
                     ></TextInput>
-                    <Text style={{ marginTop: 10, color: "#b3b3b3"}}>Check Email for new Password</Text>
-                    
+                    <Text style={{ marginTop: 10, color: "#b3b3b3" }}>Check Email for new Password</Text>
+
                 </View>
 
                 <View style={styles.bottom}>
