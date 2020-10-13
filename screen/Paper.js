@@ -63,7 +63,7 @@ const Paper = ({ navigation, route }) => {
             <View>
                 <MarqueeText
                     style={{ fontSize: 18, color: '#01a0fa', marginBottom: 15 }}
-                    duration={8000}
+                    duration={9000}
                     marqueeOnStart={true} 
                     marqueeDelay={1000}
                     marqueeResetDelay={1000}
@@ -110,15 +110,15 @@ const Paper = ({ navigation, route }) => {
 
             <View style={styles.body}>
                 <Text style={styles.mainText}>Documents</Text>
-                <ScrollView >
+                <View >
                     <FlatList
                         data={data}
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => item.tno}
                         renderItem={renderer}
                         numColumns={2}
 
                     />
-                </ScrollView>
+                </View>
 
             </View>
         </View>
