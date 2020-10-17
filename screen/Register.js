@@ -1,22 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
-
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 const Register = ({ navigation, route }) => {
 
-    const [user,setUser] = useState(null);
+    const [user, setUser] = useState(null);
+    const [token, setToken] = useState('');
     const [first, updateFirst] = useState('');
     const changeone = (txt1) => {
         updateFirst(txt1);
     }
-
     const [last, updateLast] = useState('');
     const changetwo = (txt2) => {
         updateLast(txt2);
     }
-
     const [email, updateEmail] = useState('');
     const changethree = (txt3) => {
         updateEmail(txt3);
@@ -41,14 +41,16 @@ const Register = ({ navigation, route }) => {
         console.log("My Value is " + txt);
         if (txt == 0) {
             alert("Password Did Not Match");
-        }else if (txt == 1) {
+        } else if (txt == 1) {
             alert("Email Alreay Exist");
-        }else if (txt == 2) {
+        } else if (txt == 2) {
             alert("Successfully Registered\nVerify Email!");
+            sendToken();
             navigation.navigate('Login');
-        }else if (txt == 3) {
+
+        } else if (txt == 3) {
             alert("Try Again Later");
-        }else if (txt == 4) {
+        } else if (txt == 4) {
             alert("All Fields are Mandatory");
         }
 
@@ -56,127 +58,160 @@ const Register = ({ navigation, route }) => {
 
     const updateData = (t1, t2, t3, t4, t5, t6) => {
         console.log("In updateData");
-        setUser("http://theadmissionmantra.in/register.php?fname="+t1+"&lname="+t2+"&email="+t3+"&password="+t4+"&cpassword="+t5+"&phone="+t6);
+        setUser(`http://theadmissionmantra.in/register.php?fname=${t1}&lname=${t2}&email=${t3}&password=${t4}&cpassword=${t5}&token=${token.data}&phone=${t6}`);
         console.log(user);
-        
-        fetch("http://theadmissionmantra.in/register.php?fname="+t1+"&lname="+t2+"&email="+t3+"&password="+t4+"&cpassword="+t5+"&phone="+t6)
+
+        fetch(`http://theadmissionmantra.in/register.php?fname=${t1}&lname=${t2}&email=${t3}&password=${t4}&cpassword=${t5}&token=${token.data}&phone=${t6}`)
             .then((response) => response.json())
             .then((response) => myFunc(response[0].id))
             .catch((error) => alert(error));
 
-
     }
+    const sendToken = () => {
+        fetch(`http://theadmissionmantra.in/inserttoken.php?tkn=${token.data}`,
+            {
+                method: "GET",
+            })
+        console.log('token sent');
+    }
+    const registerForPushNotifications = async () => {
+        const enabled = await askPermissions();
+        if (!enabled) {
+            return Promise.resolve();
+        }
+        let token = await Notifications.getExpoPushTokenAsync();
+        setToken(token)
+    };
+    useEffect(() => {
+        let isMounted = true;
+
+        registerForPushNotifications();
+
+        return () => { isMounted = false };
+    }, [])
+    const askPermissions = async () => {
+        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+            finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+            return false;
+        }
+        return true;
+    };
     return (
         <KeyboardAvoidingView
-      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
-        <View style={styles.main}>
-            <Top />
-            <ScrollView>
-            <View>
-                <Text style={{ marginTop: 20, marginLeft: "10%", color: "#b3b3b3" }}>Basic Info</Text>
-            </View>
-            <View style={{ flexDirection: "row", marginBottom: 20 }}>
+            behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+            style={styles.container}>
+            <View style={styles.main}>
+                <Top />
+                <ScrollView>
+                    <View>
+                        <Text style={{ marginTop: 20, marginLeft: "10%", color: "#b3b3b3" }}>Basic Info</Text>
+                    </View>
+                    <View style={{ flexDirection: "row", marginBottom: 20 }}>
 
-                <View style={{ width: "50%", paddingLeft: "10%", paddingRight: "2%" }}>
-                    <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 20, paddingRight: 10, fontSize: 18 }}
-                        value={first}
-                        onChangeText={changeone}
-                        returnKeyType="next"
-                        placeholder="First Name"
-                        onSubmitEditing={() => { this.lname.focus(); }}
-                    ></TextInput>
-                </View>
-                <View style={{ width: "50%", paddingLeft: "2%", paddingRight: "10%" }}>
-                    <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 20, paddingRight: 10, fontSize: 18 }}
-                        value={last}
-                        onChangeText={changetwo}
-                        returnKeyType="next"
-                        placeholder="Last Name"
-                        ref={(input) => { this.lname = input; }}
-                        onSubmitEditing={() => { this.email.focus(); }}
-                    ></TextInput>
-                </View>
-            </View>
-            <View>
-                <Text style={{ marginTop: 20, marginLeft: "10%", color: "#b3b3b3" }}>Personal Info</Text>
-            </View>
-            <View>
-                <View style={{ width: "100%", paddingLeft: "10%", paddingRight: "10%" }}>
-                    <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 20, paddingRight: 10, fontSize: 18 }}
-                        onChangeText={changethree}
-                        returnKeyType="next"
-                        placeholder="Email"
-                        ref={(input) => { this.email = input; }}
-                        onSubmitEditing={() => { this.pass.focus(); }}
-                    ></TextInput>
-                </View>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-                <View style={{ width: "50%", paddingLeft: "10%", paddingRight: "2%" }}>
-                    <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 20, paddingRight: 10, fontSize: 18 }}
-                        onChangeText={changefour}
-                        returnKeyType="next"
-                        placeholder="Password"
-                        ref={(input) => { this.pass = input; }}
-                        onSubmitEditing={() => { this.cpass.focus(); }}
-                        secureTextEntry={true}
-                    ></TextInput>
-                </View>
-                <View style={{ width: "50%", paddingLeft: "2%", paddingRight: "10%" }}>
-                    <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 20, paddingRight: 10, fontSize: 18 }}
-                        onChangeText={changefive}
-                        returnKeyType="next"
-                        placeholder="Confirm Password"
-                        ref={(input) => { this.cpass = input; }}
-                        onSubmitEditing={() => { this.mobile.focus(); }}
-                        secureTextEntry={true}
-                    ></TextInput>
-                </View>
-            </View>
-            <View>
-                <View style={{ width: "100%", paddingLeft: "10%", paddingRight: "10%" }}>
-                    <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 20, paddingRight: 10, fontSize: 18 }}
-                        returnKeyType="next"
-                        placeholder="Mobile Number"
-                        ref={(input) => { this.mobile = input; }}
-                        onChangeText={changesix}
-                    ></TextInput>
-                </View>
-            </View>
-        
+                        <View style={{ width: "50%", paddingLeft: "10%", paddingRight: "2%" }}>
+                            <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 20, paddingRight: 10, fontSize: 18 }}
+                                value={first}
+                                onChangeText={changeone}
+                                returnKeyType="next"
+                                placeholder="First Name"
+                                onSubmitEditing={() => { this.lname.focus(); }}
+                            ></TextInput>
+                        </View>
+                        <View style={{ width: "50%", paddingLeft: "2%", paddingRight: "10%" }}>
+                            <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 20, paddingRight: 10, fontSize: 18 }}
+                                value={last}
+                                onChangeText={changetwo}
+                                returnKeyType="next"
+                                placeholder="Last Name"
+                                ref={(input) => { this.lname = input; }}
+                                onSubmitEditing={() => { this.email.focus(); }}
+                            ></TextInput>
+                        </View>
+                    </View>
+                    <View>
+                        <Text style={{ marginTop: 20, marginLeft: "10%", color: "#b3b3b3" }}>Personal Info</Text>
+                    </View>
+                    <View>
+                        <View style={{ width: "100%", paddingLeft: "10%", paddingRight: "10%" }}>
+                            <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 20, paddingRight: 10, fontSize: 18 }}
+                                onChangeText={changethree}
+                                returnKeyType="next"
+                                placeholder="Email"
+                                ref={(input) => { this.email = input; }}
+                                onSubmitEditing={() => { this.pass.focus(); }}
+                            ></TextInput>
+                        </View>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                        <View style={{ width: "50%", paddingLeft: "10%", paddingRight: "2%" }}>
+                            <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 20, paddingRight: 10, fontSize: 18 }}
+                                onChangeText={changefour}
+                                returnKeyType="next"
+                                placeholder="Password"
+                                ref={(input) => { this.pass = input; }}
+                                onSubmitEditing={() => { this.cpass.focus(); }}
+                                secureTextEntry={true}
+                            ></TextInput>
+                        </View>
+                        <View style={{ width: "50%", paddingLeft: "2%", paddingRight: "10%" }}>
+                            <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 20, paddingRight: 10, fontSize: 18 }}
+                                onChangeText={changefive}
+                                returnKeyType="next"
+                                placeholder="Confirm Password"
+                                ref={(input) => { this.cpass = input; }}
+                                onSubmitEditing={() => { this.mobile.focus(); }}
+                                secureTextEntry={true}
+                            ></TextInput>
+                        </View>
+                    </View>
+                    <View>
+                        <View style={{ width: "100%", paddingLeft: "10%", paddingRight: "10%" }}>
+                            <TextInput style={{ borderBottomColor: "#8b8b8b", borderBottomWidth: 1, width: "100%", paddingLeft: 0, paddingTop: 20, paddingRight: 10, fontSize: 18 }}
+                                returnKeyType="next"
+                                placeholder="Mobile Number"
+                                ref={(input) => { this.mobile = input; }}
+                                onChangeText={changesix}
+                            ></TextInput>
+                        </View>
+                    </View>
 
-            <View>
-                <TouchableOpacity
-                    onPress={() => updateData(first, last, email, pass, cpass, mobile)}
-                    style={{ width: "100%", paddingRight: "10%" }}>
-                    <LinearGradient
-                        colors={['#36D1DC', '#5B86E5']}
-                        style={styles.btn1}
-                        start={[0, 0]}
-                        end={[1, 1]}
-                    >
-                        <Text
-                            style={styles.btntxt}>
-                            Register
+
+                    <View>
+                        <TouchableOpacity
+                            onPress={() => updateData(first, last, email, pass, cpass, mobile)}
+                            style={{ width: "100%", paddingRight: "10%" }}>
+                            <LinearGradient
+                                colors={['#36D1DC', '#5B86E5']}
+                                style={styles.btn1}
+                                start={[0, 0]}
+                                end={[1, 1]}
+                            >
+                                <Text
+                                    style={styles.btntxt}>
+                                    Register
                         </Text>
-                    </LinearGradient>
-                </TouchableOpacity>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.acc}>
+                        <View><Text style={styles.acctxt}>Already have an account?</Text></View>
+                        <View>
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('Login')}
+                            >
+                                <Text style={styles.link}> Login</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={{ height: 50 }}>
+                    </View>
+                </ScrollView>
             </View>
-            <View style={styles.acc}>
-                <View><Text style={styles.acctxt}>Already have an account?</Text></View>
-                <View>
-                    <TouchableOpacity
-                    onPress={() => navigation.navigate('Login')}
-                    >
-                        <Text style={styles.link}> Login</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <View style={{height:50}}>
-            </View>
-            </ScrollView>
-        </View>
         </KeyboardAvoidingView>
     );
 }

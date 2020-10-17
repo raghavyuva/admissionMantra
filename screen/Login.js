@@ -1,14 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useDebugValue, useContext } from 'react';
+import React, { useState, useDebugValue, useContext, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, KeyboardAvoidingView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 import { AsyncStorage } from 'react-native';
 import { AuthContext } from "../navigation/context";
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 const Login = ({ navigation, route }) => {
     const [usrinp, updateUsrInp] = useState('');
     const [usrpass, updateUsrPass] = useState('');
     const [data, setData] = useState([]);
+    const [token, setToken] = useState('');
     const [user, setUser] = useState(null);
     const changeone = (txt1) => {
         updateUsrInp(txt1);
@@ -16,16 +19,52 @@ const Login = ({ navigation, route }) => {
     const changetwo = (txt2) => {
         updateUsrPass(txt2);
     }
+    const sendToken = () => {
+        fetch(`http://theadmissionmantra.in/inserttoken.php?tkn=${token.data}`,
+            {
+                method: "GET",
+            })
+        console.log('token sent');
+    }
+    const registerForPushNotifications = async () => {
+        const enabled = await askPermissions();
+        if (!enabled) {
+            return Promise.resolve();
+        }
+        let token = await Notifications.getExpoPushTokenAsync();
+        setToken(token)
+        console.log(token.data);
+    };
+    useEffect(() => {
+        let isMounted = true;
+
+        registerForPushNotifications();
+
+        return () => { isMounted = false };
+    }, [])
+    const askPermissions = async () => {
+        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+            finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+            return false;
+        }
+        return true;
+    };
     const { signIn } = React.useContext(AuthContext)
     const myFunc = async (txt) => {
         console.log("My Value is " + txt);
         if (txt == 0) {
             alert("Incorrect Credentials");
-        } else if(txt == 2){
+        } else if (txt == 2) {
             alert("Email Confirmation Pending");
-        }else {
+        } else {
             try {
-              signIn(usrinp)
+                sendToken();
+                signIn(usrinp)
             } catch (error) {
                 // Error saving data  
             }
@@ -34,7 +73,7 @@ const Login = ({ navigation, route }) => {
 
     }
     const updateData = (t1, t2) => {
-        fetch("http://theadmissionmantra.in/login.php?email=" + t1 + "&password=" + t2)
+        fetch(`http://theadmissionmantra.in/login.php?email=${t1}&password=${t2}&token=${token.data}`)
             .then((response) => response.json())
             .then((response) => myFunc(response[0].id))
             .catch((error) => alert(error));

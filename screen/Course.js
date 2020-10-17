@@ -3,10 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 const Course = ({ navigation, route }) => {
     const [data, setData] = useState('');
     useEffect(() => {
+        let isMounted = true;
+       
         const Listener = fetch('http://theadmissionmantra.in/stream.php')
             .then((response) => response.json())
             .then((responseJson) => {
@@ -16,7 +19,10 @@ const Course = ({ navigation, route }) => {
             }).catch((error) => {
                 console.log("Data fetching failed");
             });
+            return () => { isMounted = false };
     }, []);
+   
+
     const renderer = ({ item, index, }) => {
         if (item.id % 2 == 0) {
             return (
@@ -77,7 +83,6 @@ const Course = ({ navigation, route }) => {
     }
     return (
         <View style={styles.main}>
-
             <View style={styles.top}>
                 <View style={styles.left}><Text style={styles.course}>  COURSES</Text></View>
                 <View style={{ height: 190, width: '60%' }}>

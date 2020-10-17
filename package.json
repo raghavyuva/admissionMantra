@@ -33,7 +33,9 @@
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "rn-pdf-reader-js": "^4.1.1"
+    "rn-pdf-reader-js": "^4.1.1",
+    "expo-notifications": "~0.7.2",
+    "expo-permissions": "~9.3.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

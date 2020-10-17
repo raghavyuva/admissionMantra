@@ -5,12 +5,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 import { ScrollView } from 'react-native-gesture-handler';
 import { AsyncStorage, ActivityIndicator } from 'react-native';
-
+import { FontAwesome5 } from '@expo/vector-icons';
 const Councelling = ({ navigation, route }) => {
     const { thread } = route.params;
     const [data, setData] = useState('');
-    const [ mail, setToken ] = useState('');
-
+    const [mail, setToken] = useState('');
+    const [admin, setAdmin] = useState(false);
+    const [status, setStatus] = useState('');
+    const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(true);
     const renderer = ({ item, index }) => {
         return (
             <View style={{ borderColor: '#fff', borderWidth: 1, marginTop: 15, marginLeft: 30, marginRight: 30 }}>
@@ -29,31 +32,65 @@ const Councelling = ({ navigation, route }) => {
         )
     }
 
-    const breakEmail = (token) =>{
+    const breakEmail = (token) => {
         var tkn = token.split('@')[0]
         setToken(tkn);
     }
+    const checkAdmin = () => {
+        fetch(`http://theadmissionmantra.in/profile.php?email=${email}`)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                setStatus(...responseJson);
+                console.log(status.status);
+                if (status.status == '2') {
+                    setAdmin(true);
+                } else {
+                    setAdmin(false);
+                }
+            }).catch((error) => {
+                alert(error);
+            });
+    }
     useEffect(() => {
         AsyncStorage.getItem('token').then((token) => {
-            breakEmail(token)
+            breakEmail(token);
+            setEmail(token);
         })
-       console.log(mail);
+        checkAdmin();
         const Listener = fetch(`http://theadmissionmantra.in/tab.php?sno=${thread}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 setData(responseJson);
-
             }).catch((error) => {
-                console.log("Data fetching failed");
+                alert(error);
             });
-
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
     }, []);
+    if (loading) {
+        return (
+            <View style={{ justifyContent: "center", flex: 1 }}>
+                <ActivityIndicator size={100} color={'#5B86E5'} style={{ alignSelf: 'center' }} />
+            </View>
+        )
+    }
     return (
         <View style={styles.main}>
             <View style={styles.nav}>
                 <View style={styles.user}>
                     <Text style={styles.usrTxt}>Hello {mail}</Text>
                 </View>
+                {admin == true ? (
+                    <TouchableOpacity style={{ marginTop: 10 }} onPress={() => {
+                        navigation.navigate('admin');
+                    }}>
+                        <FontAwesome5 name="user-secret" size={24} color="red" />
+                    </TouchableOpacity>
+                ) : (
+                        <View></View>
+                    )}  
+
                 <View style={styles.rightNotification}>
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('another', { screen: "notify" });

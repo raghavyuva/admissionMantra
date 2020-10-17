@@ -7,7 +7,6 @@ import PDFReader from 'rn-pdf-reader-js'
 import { AsyncStorage } from 'react-native';
 import { AuthContext } from "../navigation/context";
 import { bundleDirectory } from 'expo-file-system';
-
 const Profile = () => {
     const [data, setData] = useState('');
     const [password, setPassword] = useState("");
@@ -24,10 +23,9 @@ const Profile = () => {
                 .then((responseJson) => {
                     setData(...responseJson);
                 }).catch((error) => {
-                    console.log("Data fetching failed");
-
-                });
-        })
+                    alert(error);
+            });
+        })   
         setTimeout(() => {
             setLoading(false);
         }, 2000)
@@ -42,7 +40,7 @@ const Profile = () => {
                 setData(...responseJson);
 
             }).catch((error) => {
-                console.log("Data fetching failed");
+                alert("Data fetching failed");
             });
     }
     const Onsubmit = () => {
@@ -80,8 +78,8 @@ const Profile = () => {
     return (
         <KeyboardAvoidingView>
             <View style={styles.main}>
-                <View style={{ margin: 20, height: 'auto'}}>
-                    <View style={{ flexDirection: 'row',width:'100%'}}>
+                <View style={{ margin: 20, height: 'auto' }}>
+                    <View style={{ flexDirection: 'row', width: '100%' }}>
                         <View style={{ marginTop: 10, width: '49%', marginRight: '1%' }}>
                             <Text style={{ textAlign: 'left', color: 'grey', fontWeight: '500', fontSize: 16 }}>First Name</Text>
                             <View style={{ marginTop: 5, width: "100%", padding: 5, borderRadius: 7, backgroundColor: "#ccc" }}>
@@ -173,5 +171,5 @@ const styles = StyleSheet.create({
     main: { height: "100%", backgroundColor: "white", paddingTop: 30 },
     btntxt: { backgroundColor: 'transparent', fontSize: 15, color: '#fff', },
     btn1: { width: "100%", margin: 20, padding: 15, alignItems: 'center', borderRadius: 5 },
-    btn2: { width: "100%", margin: 20, marginTop:0, padding: 15, alignItems: 'center', borderRadius: 5 },
+    btn2: { width: "100%", margin: 20, marginTop: 0, padding: 15, alignItems: 'center', borderRadius: 5 },
 });
