@@ -9,10 +9,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 const Councelling = ({ navigation, route }) => {
     const { thread } = route.params;
     const [data, setData] = useState('');
-    const [mail, setToken] = useState('');
-    const [admin, setAdmin] = useState(false);
-    const [status, setStatus] = useState('');
-    const [email, setEmail] = useState('');
+    const [profile, setProfile] = useState('');
     const [loading, setLoading] = useState(true);
     const renderer = ({ item, index }) => {
         return (
@@ -24,46 +21,30 @@ const Councelling = ({ navigation, route }) => {
                             thread: item.tno, threadname: item.tname
                         }
                     }
-
                 )}>
                     <Text style={{ textAlign: 'center', color: 'white', paddingVertical: 5, fontWeight: '400', fontSize: 24 }}>{item.tname}</Text>
                 </TouchableOpacity>
             </View>
         )
     }
-
-    const breakEmail = (token) => {
-        var tkn = token.split('@')[0]
-        setToken(tkn);
-    }
-    const checkAdmin = () => {
-        fetch(`http://theadmissionmantra.in/profile.php?email=${email}`)
-            .then((response) => response.json())
-            .then((responseJson) => {
-                setStatus(...responseJson);
-                console.log(status.status);
-                if (status.status == '2') {
-                    setAdmin(true);
-                } else {
-                    setAdmin(false);
-                }
-            }).catch((error) => {
-                alert(error);
-            });
-    }
     useEffect(() => {
-        AsyncStorage.getItem('token').then((token) => {
-            breakEmail(token);
-            setEmail(token);
-        })
-        checkAdmin();
         const Listener = fetch(`http://theadmissionmantra.in/tab.php?sno=${thread}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 setData(responseJson);
+                AsyncStorage.getItem('token').then((token) => {
+                    const Listener = fetch(`http://theadmissionmantra.in/profile.php?email=${token}`)
+                        .then((response) => response.json())
+                        .then((responseJson) => {
+                            setProfile(...responseJson);
+                        }).catch((error) => {
+                            alert(error);
+                        });
+                })
             }).catch((error) => {
                 alert(error);
             });
+
         setTimeout(() => {
             setLoading(false);
         }, 2000);
@@ -79,9 +60,9 @@ const Councelling = ({ navigation, route }) => {
         <View style={styles.main}>
             <View style={styles.nav}>
                 <View style={styles.user}>
-                    <Text style={styles.usrTxt}>Hello {mail}</Text>
+                    <Text style={styles.usrTxt}>Hello {profile.fname}</Text>
                 </View>
-                {admin == true ? (
+                {profile.status == '2' ? (
                     <TouchableOpacity style={{ marginTop: 10 }} onPress={() => {
                         navigation.navigate('admin');
                     }}>
@@ -89,8 +70,7 @@ const Councelling = ({ navigation, route }) => {
                     </TouchableOpacity>
                 ) : (
                         <View></View>
-                    )}  
-
+                    )}
                 <View style={styles.rightNotification}>
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('another', { screen: "notify" });

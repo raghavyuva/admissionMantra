@@ -1,28 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, FlatList, AsyncStorage } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 const Course = ({ navigation, route }) => {
     const [data, setData] = useState('');
+    const [email, setEmail] = useState('');
+    const [status, setStatus] = useState('');
+    const [admin, setAdmin] = useState(false);
+    const [profile, setProfile] = useState('');
     useEffect(() => {
         let isMounted = true;
-       
-        const Listener = fetch('http://theadmissionmantra.in/stream.php')
-            .then((response) => response.json())
-            .then((responseJson) => {
-
-                setData(responseJson);
-                console.log(data);
-            }).catch((error) => {
-                console.log("Data fetching failed");
-            });
-            return () => { isMounted = false };
+        AsyncStorage.getItem('token').then((token) => {
+            setEmail(token);
+            const Listener = fetch('http://theadmissionmantra.in/stream.php')
+                .then((response) => response.json())
+                .then((responseJson) => {
+                    setData(responseJson);
+                    console.log(data);
+                }).catch((error) => {
+                    console.log("Data fetching failed");
+                });
+        })
+        return () => { isMounted = false };
     }, []);
-   
-
     const renderer = ({ item, index, }) => {
         if (item.id % 2 == 0) {
             return (

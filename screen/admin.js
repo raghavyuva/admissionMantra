@@ -6,6 +6,7 @@ const Admin = props => {
     const [body, setBody] = useState('');
     const [title, setTitle] = useState('');
     const [data, setData] = useState([]);
+    const [email, setEmail] = useState('');
     const [tokenmail, setTokenmail] = useState('');
     const [loading, setLoading] = useState(false);
     const Onsubmit = () => {
