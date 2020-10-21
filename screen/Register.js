@@ -75,10 +75,6 @@ const Register = ({ navigation, route }) => {
         console.log('token sent');
     }
     const registerForPushNotifications = async () => {
-        const enabled = await askPermissions();
-        if (!enabled) {
-            return Promise.resolve();
-        }
         let token = await Notifications.getExpoPushTokenAsync();
         setToken(token)
     };
@@ -89,18 +85,6 @@ const Register = ({ navigation, route }) => {
 
         return () => { isMounted = false };
     }, [])
-    const askPermissions = async () => {
-        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-        let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
-            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-            finalStatus = status;
-        }
-        if (finalStatus !== 'granted') {
-            return false;
-        }
-        return true;
-    };
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
