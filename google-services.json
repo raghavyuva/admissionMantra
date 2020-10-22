@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1003978767555",
+    "firebase_url": "https://admissionmantra-b9156.firebaseio.com",
+    "project_id": "admissionmantra-b9156",
+    "storage_bucket": "admissionmantra-b9156.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003978767555:android:d2194abf793f526164f676",
+        "android_client_info": {
+          "package_name": "com.dhruv_rohatgi.admissionMantra"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003978767555-ar2os65fejefqfhkf3til2gbgnlrtr0r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiPQCnx3I0wi58z8Sc8zEsN_gKX15sNW8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003978767555-ar2os65fejefqfhkf3til2gbgnlrtr0r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

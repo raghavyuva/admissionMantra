@@ -1,12 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Top from './Top';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 const Register = ({ navigation, route }) => {
-
     const [user, setUser] = useState(null);
     const [token, setToken] = useState('');
     const [first, updateFirst] = useState('');
@@ -78,9 +77,28 @@ const Register = ({ navigation, route }) => {
         let token = await Notifications.getExpoPushTokenAsync();
         setToken(token)
     };
+    const requestUserPermission = async () => {
+        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+        let finalStatus = existingStatus;
+
+        // only ask if permissions have not already been determined, because
+        // iOS won't necessarily prompt the user a second time.
+        if (existingStatus !== 'granted') {
+            // Android remote notification permissions are granted during the app
+            // install, so this will only ask on iOS
+            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+            finalStatus = status;
+        }
+
+        // Stop here if the user did not grant permissions
+        if (finalStatus !== 'granted') {
+            return;
+        }
+        console.log(finalStatus)
+    }
     useEffect(() => {
         let isMounted = true;
-
+        requestUserPermission();
         registerForPushNotifications();
 
         return () => { isMounted = false };

@@ -54,7 +54,7 @@ const Admin = props => {
                         title: `${title}`
                     })
                 })
-              
+
         } catch (error) {
             alert(error)
         }

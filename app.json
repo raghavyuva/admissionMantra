@@ -23,7 +23,8 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "package": "com.dhruv_rohatgi.admissionMantra"
+      "package": "com.dhruv_rohatgi.admissionMantra",
+      "googleServicesFile": "./google-services.json"
     }
   }
 }
